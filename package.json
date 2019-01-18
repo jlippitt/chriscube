@@ -1,0 +1,9 @@
+{
+  "name": "webgl",
+  "version": "1.0.0",
+  "main": "src/index",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.2.4"
+  }
+}
