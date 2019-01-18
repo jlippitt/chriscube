@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "module": "system",
     "baseUrl": "src",
     "outFile": "webgl.js",
     "target": "esnext",

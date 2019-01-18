@@ -5,5 +5,9 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "^3.2.4"
+  },
+  "dependencies": {
+    "@types/gl-matrix": "^2.4.4",
+    "gl-matrix": "^3.0.0"
   }
 }
