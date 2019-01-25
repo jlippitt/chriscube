@@ -171,8 +171,6 @@ export function drawScene({
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.uniform1i(programInfo.uniformLocations.sampler, 0);
 
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
   drawIndices(gl, buffers.indices);
 
   rotation += deltaTime;
