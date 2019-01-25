@@ -2,6 +2,15 @@ import { mat4 } from 'gl-matrix';
 import { BufferInfo } from 'buffers';
 import { ProgramInfo } from 'shaders';
 
+let squareRotation = 0.0;
+
+export interface DrawSceneParams {
+  gl: WebGLRenderingContext;
+  programInfo: ProgramInfo;
+  buffers: BufferInfo;
+  deltaTime: number;
+}
+
 interface BindVertexDataParams {
   gl: WebGLRenderingContext;
   attribLocation: GLint;
@@ -37,6 +46,13 @@ function createModelViewMatrix(): mat4 {
     [-0.0, 0.0, -6.0]
   );
 
+  mat4.rotate(
+    modelViewMatrix,
+    modelViewMatrix,
+    squareRotation,
+    [0, 0, 1],
+  );
+
   return modelViewMatrix;
 }
 
@@ -65,11 +81,12 @@ function bindVertexData({
   gl.enableVertexAttribArray(attribLocation);
 }
 
-export function drawScene(
-  gl: WebGLRenderingContext,
-  programInfo: ProgramInfo,
-  buffers: BufferInfo,
-): void {
+export function drawScene({
+  gl,
+  programInfo,
+  buffers,
+  deltaTime,
+}: DrawSceneParams): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clearDepth(1.0);
   gl.enable(gl.DEPTH_TEST);
@@ -111,5 +128,7 @@ export function drawScene(
   );
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+  squareRotation += deltaTime;
 }
 

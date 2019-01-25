@@ -18,7 +18,24 @@ function main(): void {
   const programInfo = initShaderProgram(gl);
   const buffers = initBuffers(gl);
 
-  drawScene(gl, programInfo, buffers);
+  let then = 0;
+
+  const render = (now: number) => {
+    now *= 0.001;
+    const deltaTime = now - then;
+    then = now;
+
+    drawScene({
+      gl,
+      programInfo,
+      buffers,
+      deltaTime,
+    });
+
+    requestAnimationFrame(render);
+  };
+
+  requestAnimationFrame(render);
 }
 
 main();
