@@ -128,8 +128,6 @@ export function drawScene({
     numComponents: 4,
   });
 
-  drawIndices(gl, buffers.indices);
-
   gl.useProgram(programInfo.program);
 
   const { uniformLocations } = programInfo;
@@ -147,6 +145,8 @@ export function drawScene({
   );
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+  drawIndices(gl, buffers.indices);
 
   rotation += deltaTime;
 }
