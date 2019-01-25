@@ -3,6 +3,7 @@ import { flatMap } from 'lodash';
 export interface BufferInfo {
   color: WebGLBuffer;
   indices: WebGLBuffer;
+  normal: WebGLBuffer;
   position: WebGLBuffer;
   texture: WebGLBuffer;
 }
@@ -46,6 +47,44 @@ const indexData = [
   16, 17, 18,     16, 18, 19,
   // left
   20, 21, 22,     20, 22, 23,
+];
+
+const normalData = [
+  // Front
+   0.0,  0.0,  1.0,
+   0.0,  0.0,  1.0,
+   0.0,  0.0,  1.0,
+   0.0,  0.0,  1.0,
+
+  // Back
+   0.0,  0.0, -1.0,
+   0.0,  0.0, -1.0,
+   0.0,  0.0, -1.0,
+   0.0,  0.0, -1.0,
+
+  // Top
+   0.0,  1.0,  0.0,
+   0.0,  1.0,  0.0,
+   0.0,  1.0,  0.0,
+   0.0,  1.0,  0.0,
+
+  // Bottom
+   0.0, -1.0,  0.0,
+   0.0, -1.0,  0.0,
+   0.0, -1.0,  0.0,
+   0.0, -1.0,  0.0,
+
+  // Right
+   1.0,  0.0,  0.0,
+   1.0,  0.0,  0.0,
+   1.0,  0.0,  0.0,
+   1.0,  0.0,  0.0,
+
+  // Left
+  -1.0,  0.0,  0.0,
+  -1.0,  0.0,  0.0,
+  -1.0,  0.0,  0.0,
+  -1.0,  0.0,  0.0
 ];
 
 const positionData = [
@@ -142,6 +181,11 @@ export const initBuffers = (gl: WebGLRenderingContext): BufferInfo => ({
     gl,
     type: gl.ELEMENT_ARRAY_BUFFER,
     data: new Uint16Array(indexData),
+  }),
+  normal: createBuffer({
+    gl,
+    type: gl.ARRAY_BUFFER,
+    data: new Float32Array(normalData),
   }),
   position: createBuffer({
     gl,

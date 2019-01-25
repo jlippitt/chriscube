@@ -64,6 +64,13 @@ function createModelViewMatrix(): mat4 {
   return modelViewMatrix;
 }
 
+function createNormalMatrix(modelViewMatrix: mat4): mat4 {
+  const normalMatrix = mat4.create();
+  mat4.invert(normalMatrix, modelViewMatrix);
+  mat4.transpose(normalMatrix, normalMatrix);
+  return normalMatrix;
+}
+
 function bindVertexData({
   gl,
   attribLocation,
@@ -115,6 +122,7 @@ export function drawScene({
 
   const projectionMatrix = createProjectionMatrix(gl);
   const modelViewMatrix = createModelViewMatrix();
+  const normalMatrix = createNormalMatrix(modelViewMatrix);
 
   bindVertexData({
     gl,
@@ -128,6 +136,13 @@ export function drawScene({
     attribLocation: programInfo.attribLocations.textureCoord,
     buffer: buffers.texture,
     numComponents: 2,
+  });
+
+  bindVertexData({
+    gl,
+    attribLocation: programInfo.attribLocations.vertexNormal,
+    buffer: buffers.normal,
+    numComponents: 3,
   });
 
   gl.useProgram(programInfo.program);
@@ -144,6 +159,12 @@ export function drawScene({
     uniformLocations.modelViewMatrix,
     false,
     modelViewMatrix
+  );
+
+  gl.uniformMatrix4fv(
+    uniformLocations.normalMatrix,
+    false,
+    normalMatrix,
   );
 
   gl.activeTexture(gl.TEXTURE0);
