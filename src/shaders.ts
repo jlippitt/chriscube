@@ -2,6 +2,7 @@ export interface ProgramInfo {
   program: WebGLProgram;
   attribLocations: {
     vertexPosition: GLint;
+    vertexColor: GLint;
   };
   uniformLocations: {
     projectionMatrix: WebGLUniformLocation;
@@ -11,18 +12,24 @@ export interface ProgramInfo {
 
 const vertexShaderSource = `
   attribute vec4 vertexPosition;
+  attribute vec4 vertexColor;
 
   uniform mat4 modelViewMatrix;
   uniform mat4 projectionMatrix;
 
+  varying lowp vec4 color;
+
   void main() {
     gl_Position = projectionMatrix * modelViewMatrix * vertexPosition;
+    color = vertexColor;
   }
 `;
 
 const fragmentShaderSource = `
+  varying lowp vec4 color;
+
   void main() {
-    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    gl_FragColor = color;
   }
 `;
 
@@ -73,6 +80,7 @@ export function initShaderProgram(gl: WebGLRenderingContext): ProgramInfo {
     program,
     attribLocations: {
       vertexPosition: gl.getAttribLocation(program, 'vertexPosition') as GLint,
+      vertexColor: gl.getAttribLocation(program, 'vertexColor') as GLint,
     },
     uniformLocations: {
       projectionMatrix: gl.getUniformLocation(program, 'projectionMatrix') as WebGLUniformLocation,

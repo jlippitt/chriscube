@@ -1,5 +1,13 @@
 import { mat4 } from 'gl-matrix';
+import { BufferInfo } from 'buffers';
 import { ProgramInfo } from 'shaders';
+
+interface BindVertexDataParams {
+  gl: WebGLRenderingContext;
+  attribLocation: GLint;
+  buffer: WebGLBuffer;
+  numComponents: number;
+}
 
 function createProjectionMatrix(gl: WebGLRenderingContext): mat4 {
   const fieldOfView = 45 * Math.PI / 180;
@@ -32,23 +40,21 @@ function createModelViewMatrix(): mat4 {
   return modelViewMatrix;
 }
 
-function bindVertexPositions(
-  gl: WebGLRenderingContext,
-  programInfo: ProgramInfo,
-  positionBuffer: WebGLBuffer
-): void {
-  const numComponents = 2;
+function bindVertexData({
+  gl,
+  attribLocation,
+  buffer,
+  numComponents,
+}: BindVertexDataParams): void {
   const type = gl.FLOAT;
   const normalize = false;
   const stride = 0;
   const offset = 0;
 
-  const { vertexPosition } = programInfo.attribLocations;
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
   gl.vertexAttribPointer(
-    vertexPosition,
+    attribLocation,
     numComponents,
     type,
     normalize,
@@ -56,13 +62,13 @@ function bindVertexPositions(
     offset
   );
 
-  gl.enableVertexAttribArray(vertexPosition);
+  gl.enableVertexAttribArray(attribLocation);
 }
 
 export function drawScene(
   gl: WebGLRenderingContext,
   programInfo: ProgramInfo,
-  positionBuffer: WebGLBuffer
+  buffers: BufferInfo,
 ): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clearDepth(1.0);
@@ -74,7 +80,19 @@ export function drawScene(
   const projectionMatrix = createProjectionMatrix(gl);
   const modelViewMatrix = createModelViewMatrix();
 
-  bindVertexPositions(gl, programInfo, positionBuffer);
+  bindVertexData({
+    gl,
+    attribLocation: programInfo.attribLocations.vertexPosition,
+    buffer: buffers.position,
+    numComponents: 2,
+  });
+
+  bindVertexData({
+    gl,
+    attribLocation: programInfo.attribLocations.vertexColor,
+    buffer: buffers.color,
+    numComponents: 4,
+  });
 
   gl.useProgram(programInfo.program);
 
