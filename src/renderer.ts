@@ -2,7 +2,7 @@ import { mat4 } from 'gl-matrix';
 import { BufferInfo } from 'buffers';
 import { ProgramInfo } from 'shaders';
 
-let squareRotation = 0.0;
+let rotation = 0.0;
 
 export interface DrawSceneParams {
   gl: WebGLRenderingContext;
@@ -49,8 +49,15 @@ function createModelViewMatrix(): mat4 {
   mat4.rotate(
     modelViewMatrix,
     modelViewMatrix,
-    squareRotation,
+    rotation,
     [0, 0, 1],
+  );
+
+  mat4.rotate(
+    modelViewMatrix,
+    modelViewMatrix,
+    rotation * 0.7,
+    [0, 1, 0],
   );
 
   return modelViewMatrix;
@@ -81,6 +88,16 @@ function bindVertexData({
   gl.enableVertexAttribArray(attribLocation);
 }
 
+function drawIndices(gl: WebGLRenderingContext, indices: WebGLBuffer): void {
+  const vertexCount = 36;
+  const type = gl.UNSIGNED_SHORT;
+  const offset = 0;
+
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indices);
+
+  gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
+}
+
 export function drawScene({
   gl,
   programInfo,
@@ -101,7 +118,7 @@ export function drawScene({
     gl,
     attribLocation: programInfo.attribLocations.vertexPosition,
     buffer: buffers.position,
-    numComponents: 2,
+    numComponents: 3,
   });
 
   bindVertexData({
@@ -110,6 +127,8 @@ export function drawScene({
     buffer: buffers.color,
     numComponents: 4,
   });
+
+  drawIndices(gl, buffers.indices);
 
   gl.useProgram(programInfo.program);
 
@@ -129,6 +148,6 @@ export function drawScene({
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-  squareRotation += deltaTime;
+  rotation += deltaTime;
 }
 
