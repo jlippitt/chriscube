@@ -2,34 +2,37 @@ export interface ProgramInfo {
   program: WebGLProgram;
   attribLocations: {
     vertexPosition: GLint;
-    vertexColor: GLint;
+    textureCoord: GLint;
   };
   uniformLocations: {
     projectionMatrix: WebGLUniformLocation;
     modelViewMatrix: WebGLUniformLocation;
+    sampler: WebGLUniformLocation;
   };
 }
 
 const vertexShaderSource = `
-  attribute vec4 vertexPosition;
-  attribute vec4 vertexColor;
+  attribute vec4 aVertexPosition;
+  attribute vec2 aTextureCoord;
 
-  uniform mat4 modelViewMatrix;
-  uniform mat4 projectionMatrix;
+  uniform mat4 uModelViewMatrix;
+  uniform mat4 uProjectionMatrix;
 
-  varying lowp vec4 color;
+  varying highp vec2 vTextureCoord;
 
   void main() {
-    gl_Position = projectionMatrix * modelViewMatrix * vertexPosition;
-    color = vertexColor;
+    gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+    vTextureCoord = aTextureCoord;
   }
 `;
 
 const fragmentShaderSource = `
-  varying lowp vec4 color;
+  varying highp vec2 vTextureCoord;
+
+  uniform sampler2D uSampler;
 
   void main() {
-    gl_FragColor = color;
+    gl_FragColor = texture2D(uSampler, vTextureCoord);
   }
 `;
 
@@ -79,12 +82,13 @@ export function initShaderProgram(gl: WebGLRenderingContext): ProgramInfo {
   return {
     program,
     attribLocations: {
-      vertexPosition: gl.getAttribLocation(program, 'vertexPosition') as GLint,
-      vertexColor: gl.getAttribLocation(program, 'vertexColor') as GLint,
+      vertexPosition: gl.getAttribLocation(program, 'aVertexPosition') as GLint,
+      textureCoord: gl.getAttribLocation(program, 'aTextureCoord') as GLint,
     },
     uniformLocations: {
-      projectionMatrix: gl.getUniformLocation(program, 'projectionMatrix') as WebGLUniformLocation,
-      modelViewMatrix: gl.getUniformLocation(program, 'modelViewMatrix') as WebGLUniformLocation,
+      projectionMatrix: gl.getUniformLocation(program, 'uProjectionMatrix') as WebGLUniformLocation,
+      modelViewMatrix: gl.getUniformLocation(program, 'uModelViewMatrix') as WebGLUniformLocation,
+      sampler: gl.getUniformLocation(program, 'uSampler') as WebGLUniformLocation,
     },
   };
 }

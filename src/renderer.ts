@@ -8,6 +8,7 @@ export interface DrawSceneParams {
   gl: WebGLRenderingContext;
   programInfo: ProgramInfo;
   buffers: BufferInfo;
+  texture: WebGLTexture;
   deltaTime: number;
 }
 
@@ -102,6 +103,7 @@ export function drawScene({
   gl,
   programInfo,
   buffers,
+  texture,
   deltaTime,
 }: DrawSceneParams): void {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -123,9 +125,9 @@ export function drawScene({
 
   bindVertexData({
     gl,
-    attribLocation: programInfo.attribLocations.vertexColor,
-    buffer: buffers.color,
-    numComponents: 4,
+    attribLocation: programInfo.attribLocations.textureCoord,
+    buffer: buffers.texture,
+    numComponents: 2,
   });
 
   gl.useProgram(programInfo.program);
@@ -143,6 +145,10 @@ export function drawScene({
     false,
     modelViewMatrix
   );
+
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.uniform1i(programInfo.uniformLocations.sampler, 0);
 
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 

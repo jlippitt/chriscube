@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   mode: 'production',
   entry: './src/index.ts',
@@ -16,6 +18,6 @@ module.exports = {
   },
   output: {
     filename: 'webgl.js',
-    path: __dirname,
+    path: path.resolve(__dirname, 'public'),
   },
 };

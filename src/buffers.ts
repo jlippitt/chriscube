@@ -4,6 +4,7 @@ export interface BufferInfo {
   color: WebGLBuffer;
   indices: WebGLBuffer;
   position: WebGLBuffer;
+  texture: WebGLBuffer;
 }
 
 interface CreateBufferParams {
@@ -85,6 +86,39 @@ const positionData = [
   -1.0,  1.0, -1.0,
 ];
 
+const textureData = [
+  // Front
+  0.0,  0.0,
+  1.0,  0.0,
+  1.0,  1.0,
+  0.0,  1.0,
+  // Back
+  0.0,  0.0,
+  1.0,  0.0,
+  1.0,  1.0,
+  0.0,  1.0,
+  // Top
+  0.0,  0.0,
+  1.0,  0.0,
+  1.0,  1.0,
+  0.0,  1.0,
+  // Bottom
+  0.0,  0.0,
+  1.0,  0.0,
+  1.0,  1.0,
+  0.0,  1.0,
+  // Right
+  0.0,  0.0,
+  1.0,  0.0,
+  1.0,  1.0,
+  0.0,  1.0,
+  // Left
+  0.0,  0.0,
+  1.0,  0.0,
+  1.0,  1.0,
+  0.0,  1.0,
+];
+
 function createBuffer({ gl, type, data }: CreateBufferParams): WebGLBuffer {
   const buffer = gl.createBuffer();
 
@@ -113,5 +147,10 @@ export const initBuffers = (gl: WebGLRenderingContext): BufferInfo => ({
     gl,
     type: gl.ARRAY_BUFFER,
     data: new Float32Array(positionData),
+  }),
+  texture: createBuffer({
+    gl,
+    type: gl.ARRAY_BUFFER,
+    data: new Float32Array(textureData),
   }),
 });

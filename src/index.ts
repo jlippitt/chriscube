@@ -1,6 +1,7 @@
 import { initBuffers } from 'buffers';
 import { initShaderProgram } from 'shaders';
 import { drawScene } from 'renderer';
+import { loadTexture } from 'textures';
 
 function main(): void {
   const canvas = document.getElementById('glCanvas') as HTMLCanvasElement;
@@ -17,6 +18,7 @@ function main(): void {
 
   const programInfo = initShaderProgram(gl);
   const buffers = initBuffers(gl);
+  const texture = loadTexture(gl, './cubetexture.png');
 
   let then = 0;
 
@@ -29,6 +31,7 @@ function main(): void {
       gl,
       programInfo,
       buffers,
+      texture,
       deltaTime,
     });
 
