@@ -39,7 +39,7 @@ const vertexShaderSource = `
 
     highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
 
-    vLighting = ambientLight * (directionalLightColor * directional);
+    vLighting = ambientLight + (directionalLightColor * directional);
   }
 `;
 
