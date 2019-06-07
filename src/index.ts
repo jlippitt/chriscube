@@ -1,9 +1,9 @@
 import { initBuffers } from 'buffers';
 import { initShaderProgram } from 'shaders';
 import { drawScene } from 'renderer';
-import { loadTexture } from 'textures';
+import { loadVideo, initTexture, updateTexture } from 'textures';
 
-function main(): void {
+async function main(): Promise<void> {
   const canvas = document.getElementById('glCanvas') as HTMLCanvasElement;
 
   if (!canvas) {
@@ -18,7 +18,9 @@ function main(): void {
 
   const programInfo = initShaderProgram(gl);
   const buffers = initBuffers(gl);
-  const texture = loadTexture(gl, './cubetexture.png');
+  const texture = initTexture(gl);
+
+  const video = await loadVideo('./chris.mp4');
 
   let then = 0;
 
@@ -26,6 +28,8 @@ function main(): void {
     now *= 0.001;
     const deltaTime = now - then;
     then = now;
+
+    updateTexture(gl, texture, video);
 
     drawScene({
       gl,
@@ -41,4 +45,4 @@ function main(): void {
   requestAnimationFrame(render);
 }
 
-main();
+main().catch(err => console.error(err.stack));

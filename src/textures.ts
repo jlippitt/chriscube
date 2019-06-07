@@ -1,9 +1,36 @@
-const isPowerOf2 = (value: number): boolean => (value & (value - 1)) === 0;
+export function loadVideo(url: string): Promise<HTMLVideoElement> {
+  let playing = false;
+  let timeupdate = false;
 
-export function loadTexture(
-  gl: WebGLRenderingContext,
-  url: string
-): WebGLTexture {
+  const video = document.createElement('video');
+
+  video.src = url;
+  video.autoplay = false;
+  video.muted = true;
+  video.loop = true;
+
+  return new Promise(resolve => {
+    const checkReady = () => {
+      if (playing && timeupdate) {
+        resolve(video);
+      }
+    };
+
+    video.addEventListener('playing', () => {
+      playing = true;
+      checkReady();
+    }, true);
+
+    video.addEventListener('timeupdate', () => {
+      timeupdate = true;
+      checkReady();
+    }, true);
+
+    video.play();
+  });
+}
+
+export function initTexture(gl: WebGLRenderingContext): WebGLTexture {
   const texture = gl.createTexture();
 
   if (!texture) {
@@ -33,30 +60,31 @@ export function loadTexture(
     placeholder
   );
 
-  const image = new Image();
-
-  image.onload = () => {
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      level,
-      internalFormat,
-      srcFormat,
-      srcType,
-      image
-    );
-
-    if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-      gl.generateMipmap(gl.TEXTURE_2D);
-    } else {
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    }
-  };
-
-  image.src = url;
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
   return texture;
+}
+
+export function updateTexture(
+  gl: WebGLRenderingContext,
+  texture: WebGLTexture,
+  video: HTMLVideoElement,
+): void {
+  const level = 0;
+  const internalFormat = gl.RGBA;
+  const srcFormat = gl.RGBA;
+  const srcType = gl.UNSIGNED_BYTE;
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    level,
+    internalFormat,
+    srcFormat,
+    srcType,
+    video
+  );
 }
