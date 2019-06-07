@@ -52,7 +52,7 @@ const fragmentShaderSource = `
   void main() {
     highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
 
-    gl_FragColor = vec4(texelColor.rgb * vLighting, texelColor.a);
+    gl_FragColor = vec4((texelColor.rgb * vec3(0.9, 0.9, 0.9) + vec3(0.1, 0.1, 0.1)) * vLighting, texelColor.a);
   }
 `;
 
