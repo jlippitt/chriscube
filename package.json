@@ -1,5 +1,6 @@
 {
-  "name": "webgl",
+  "name": "chriscube",
+  "description": "It's Chris's face, on a cube!",
   "version": "1.0.0",
   "main": "src/index",
   "license": "MIT",
