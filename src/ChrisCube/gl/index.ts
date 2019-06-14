@@ -3,6 +3,8 @@ import { initShaderProgram } from './shaders';
 import { drawScene } from './renderer';
 import { loadVideo, initTexture, updateTexture } from './textures';
 
+const chris = require('./assets/chris.mp4');
+
 export async function initGl(canvasId: string): Promise<void> {
   const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
 
@@ -20,7 +22,7 @@ export async function initGl(canvasId: string): Promise<void> {
   const buffers = initBuffers(gl);
   const texture = initTexture(gl);
 
-  const video = await loadVideo('./chris.mp4');
+  const video = await loadVideo(chris);
 
   let then = 0;
 
