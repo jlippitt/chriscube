@@ -1,13 +1,13 @@
-import { initBuffers } from 'buffers';
-import { initShaderProgram } from 'shaders';
-import { drawScene } from 'renderer';
-import { loadVideo, initTexture, updateTexture } from 'textures';
+import { initBuffers } from './buffers';
+import { initShaderProgram } from './shaders';
+import { drawScene } from './renderer';
+import { loadVideo, initTexture, updateTexture } from './textures';
 
-async function main(): Promise<void> {
-  const canvas = document.getElementById('glCanvas') as HTMLCanvasElement;
+export async function initGl(canvasId: string): Promise<void> {
+  const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
 
   if (!canvas) {
-    throw new Error('Could not find canvas element');
+    throw new Error(`Could not find canvas element "${canvasId}"`);
   }
 
   const gl = canvas.getContext('webgl');
@@ -44,5 +44,3 @@ async function main(): Promise<void> {
 
   requestAnimationFrame(render);
 }
-
-main().catch(err => console.error(err.stack));

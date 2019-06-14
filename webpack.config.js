@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'production',
-  entry: './src/index.ts',
+  entry: './src/index.tsx',
   module: {
     rules: [
       {
@@ -13,7 +13,7 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts'],
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
     modules: ['./node_modules', './src'],
   },
   output: {

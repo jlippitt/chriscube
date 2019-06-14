@@ -1,6 +1,6 @@
 import { mat4 } from 'gl-matrix';
-import { BufferInfo } from 'buffers';
-import { ProgramInfo } from 'shaders';
+import { BufferInfo } from './buffers';
+import { ProgramInfo } from './shaders';
 
 let rotation = 0.0;
 
