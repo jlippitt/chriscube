@@ -17,7 +17,7 @@ export default class ChrisCube extends PureComponent<Props> {
   }
 
   componentDidMount() {
-    setTimeout(() => initGl(this.id), 1);
+    initGl(this.id);
   }
 
   render() {
